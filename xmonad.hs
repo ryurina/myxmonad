@@ -15,6 +15,7 @@ import XMonad.Util.Run
 import XMonad.Hooks.ManageDocks 
 import XMonad.Layout.Gaps
 import Graphics.X11.ExtraTypes.XF86
+import XMonad.Hooks.EwmhDesktops 
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -80,6 +81,11 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((0, xF86XK_AudioMute), spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
     , ((0, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ -5%")
     , ((0, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ +5%")
+
+    -- brightness
+    , ((0, xF86XK_MonBrightnessUp), spawn "lux -a 5%")    
+    , ((0, xF86XK_MonBrightnessDown), spawn "lux -s 5%") 
+
     -- keyboard layout switch
     , ((modm .|. shiftMask, xK_Escape), spawn "/home/rina/.scripts/layout_switch.sh")
     -- close focused window
@@ -241,8 +247,9 @@ myManageHook = composeAll
 -- return (All True) if the default handler is to be run afterwards. To
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
-myEventHook = mempty
+-- myEventHook = mempty (default setting)
 
+myEventHook = docksEventHook <+> handleEventHook def <+> fullscreenEventHook
 ------------------------------------------------------------------------
 -- Status bars and logging
 

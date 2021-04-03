@@ -16,6 +16,8 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Layout.Gaps
 import Graphics.X11.ExtraTypes.XF86
 import XMonad.Hooks.EwmhDesktops 
+import XMonad.Layout.Spacing
+import XMonad.Layout.ResizableTile
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -77,6 +79,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- launch spotify
     ,((modm .|. shiftMask, xK_s     ), spawn "spotify")
 
+    -- launch spotify
+    ,((modm, xK_Print     ), spawn "xfce4-screenshooter")
+
     -- volume keys
     , ((0, xF86XK_AudioMute), spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
     , ((0, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ -5%")
@@ -88,6 +93,10 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- keyboard layout switch
     , ((modm .|. shiftMask, xK_Escape), spawn "/home/rina/.scripts/layout_switch.sh")
+    
+    -- ToggleStruts
+    , ((modm, xK_Return     ), sendMessage ToggleStruts)
+
     -- close focused window
     , ((modm .|. shiftMask, xK_c     ), kill)
 
@@ -206,7 +215,9 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 myLayout = avoidStruts (tiled ||| Mirror tiled ||| Full)
   where
      -- default tiling algorithm partitions the screen into two panes
-     tiled   = Tall nmaster delta ratio
+
+     -- tiled   = Tall nmaster delta ratio
+     tiled = spacing 5 $ ResizableTall nmaster delta ratio []
 
      -- The default number of windows in the master pane
      nmaster = 1

@@ -1,0 +1,67 @@
+Config { font = "xft:Roboto Slab:pixelsize=12:antialias=true:hinting=true"
+       , additionalFonts = ["xft:FontAwesome:pixelsize=13"]
+       , borderColor = "#ff2a6d"
+       , border = BottomB
+       , bgColor = "#321450"
+       , fgColor = "#d1f7ff"
+       , alpha = 255
+       , position = Top
+       , textOffset = -1
+       , iconOffset = -1
+       , lowerOnStart = True
+       , pickBroadest = False
+       , persistent = False
+       , hideOnStart = False
+       , iconRoot = "."
+       , allDesktops = True
+       , overrideRedirect = True
+       , commands = [ Run Weather "FMMI" ["-t","<station>: <tempC>C",
+                                          "-L","18","-H","25",
+                                          "--normal","green",
+                                          "--high","red",
+                                          "--low","lightblue"] 36000
+                    , Run Network "eth0" ["-L","0","-H","32",
+                                          "--normal","green","--high","red"] 10
+                    , Run Network "eth1" ["-L","0","-H","32",
+                                          "--normal","green","--high","red"] 10
+                    , Run Cpu ["-L","3","-H","50",
+                               "--normal","#73fffe","--high","#de004e"] 10
+                    , Run Memory ["-t","<fn=1></fn> Mem: <usedratio>%"] 10
+
+                    , Run Wireless "wlan0" [ "-t", "<essid>",
+                    						"--normal","green","--high","red" ] 10
+
+
+                    -- battery monitor
+        			      , Run Battery        [ "--template" , " <fc=#defe47><fn=1>  </fn></fc> <acstatus>"
+                             , "--Low"      , "10"        -- units: %
+                             , "--High"     , "80"        -- units: %
+                             , "--low"      , "#ff3a6d"
+                             , "--normal"   , "#ff3a6d"
+                             , "--high"     , "#ff3a6d"
+
+                             , "--" -- battery specific options
+                                       -- discharging status
+                                       , "-o"	, "<left>% (<timeleft>)"
+                                       -- AC "on" status
+                                       , "-O"	, "<fc=#defe47>Charging</fc>"
+                                       -- charged status
+                                       , "-i"	, "<fc=#defe47>Charged</fc>"
+                             ] 50
+                    , Run Swap [] 10
+                    , Run Com "/home/rina/.scripts/get_volume.sh" [] "amixer" 10
+                    , Run Date "<fn=1></fn> %a %b %_d %Y %H:%M:%S" "date" 10
+                    , Run Kbd            [ ("us(dvorak)" , "<fc=#ffffff>DV</fc>")
+                                         , ("us"         , "<fc=#ffffff>US</fc>")
+                                         , ("fr"         , "<fc=#ffffff>FR</fc>")
+                                         , ("ru"         , "<fc=#ffffff>RU</fc>")
+                             ]
+        ]
+
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "<fn=1></fn> %cpu% | %memory% * %swap% | <fc=#defe47><fn=1></fn> %wlan0wi%</fc>  }\
+                    \{ <fc=#ff3a6d>%date%</fc> | %FMMI% | %battery% | <fn=1> </fn> %kbd% | <fn=1></fn> %amixer% | <fn=1></fn> Kali Linux __"
+       }
+

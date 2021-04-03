@@ -1,0 +1,7 @@
+xmobar
+nitrogen
+compton
+amixer
+trayer
+nm-applets
+

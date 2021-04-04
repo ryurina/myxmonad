@@ -18,6 +18,7 @@ import Graphics.X11.ExtraTypes.XF86
 import XMonad.Hooks.EwmhDesktops 
 import XMonad.Layout.Spacing
 import XMonad.Layout.ResizableTile
+import XMonad.Actions.GridSelect
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -76,11 +77,17 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- launch rofi
     , ((modm .|. shiftMask, xK_p     ), spawn "rofi -show run")
 
+     -- launch joplin
+    , ((modm .|. controlMask , xK_j     ), spawn "/home/rina/Joplin.AppImage")
+
     -- launch spotify
     ,((modm .|. shiftMask, xK_s     ), spawn "spotify")
 
-    -- launch spotify
+    -- launch screenshot
     ,((modm, xK_Print     ), spawn "xfce4-screenshooter")
+
+    -- launch brave-browser
+    ,((modm .|. shiftMask, xK_b     ), spawn "brave-browser")
 
     -- volume keys
     , ((0, xF86XK_AudioMute), spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
@@ -95,7 +102,10 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_Escape), spawn "/home/rina/.scripts/layout_switch.sh")
     
     -- ToggleStruts
-    , ((modm, xK_Return     ), sendMessage ToggleStruts)
+    , ((modm .|. controlMask, xK_Return), sendMessage ToggleStruts)
+
+    -- grid select
+    , ((modm, xK_g), goToSelected defaultGSConfig)
 
     -- close focused window
     , ((modm .|. shiftMask, xK_c     ), kill)
@@ -216,7 +226,7 @@ myLayout = avoidStruts (tiled ||| Mirror tiled ||| Full)
   where
      -- default tiling algorithm partitions the screen into two panes
 
-     -- tiled   = Tall nmaster delta ratio
+     -- tiled   = Tall nmaster delta  ratio
      tiled = spacing 5 $ ResizableTall nmaster delta ratio []
 
      -- The default number of windows in the master pane

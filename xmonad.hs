@@ -19,6 +19,7 @@ import XMonad.Hooks.EwmhDesktops
 import XMonad.Layout.Spacing
 import XMonad.Layout.ResizableTile
 import XMonad.Actions.GridSelect
+import XMonad.Layout.NoBorders (smartBorders)
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -222,7 +223,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = avoidStruts (tiled ||| Mirror tiled ||| Full)
+myLayout = avoidStruts $ smartBorders (tiled ||| Mirror tiled ||| Full)
   where
      -- default tiling algorithm partitions the screen into two panes
 
